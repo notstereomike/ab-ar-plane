@@ -37,44 +37,36 @@
       visible="false">
     </a-text>
 
-    <a-entity camera>
-      <a-cursor
-        id="cursor"
-        color="red"
-        fuse="false"
-        raycaster="objects: .clickable">
-      </a-cursor>
-    </a-entity>
+    <a-entity id="cursor" raycaster="objects: .ground" cursor="fuse: false; rayOrigin: mouse"></a-entity>
 
-    <a-plane
-      id="ground"
-      class="clickable"
-      position="0 0 0"
-      rotation="-90 0 0"
-      width="100"
-      height="100"
-      color="#FFFFFF"
-      opacity="0"
-      visible="true">
-    </a-plane>
+    <a-entity hit-test id="hitTest" visible="false"></a-entity>
+
+    <a-entity camera></a-entity>
 
   </a-scene>
 
   <script>
-    document.querySelector('#ground').addEventListener('click', function (event) {
-      const airplane = document.querySelector('#airplane');
-      const infoText = document.querySelector('#info-text');
-      
-      airplane.setAttribute('position', event.detail.intersection.point);
-      infoText.setAttribute('position', {
-        x: event.detail.intersection.point.x + 0.1,
-        y: event.detail.intersection.point.y + 0.5,
-        z: event.detail.intersection.point.z
-      });
-
-      airplane.setAttribute('visible', 'true');
-      infoText.setAttribute('visible', 'true');
+    const hitTestEl = document.getElementById('hitTest');
+    const airplane = document.getElementById('airplane');
+    const infoText = document.getElementById('info-text');
+    
+    document.querySelector('a-scene').addEventListener('click', function (event) {
+      if (event.detail.intersection) {
+        const position = event.detail.intersection.point;
+        airplane.setAttribute('position', position);
+        infoText.setAttribute('position', {
+          x: position.x + 0.1,
+          y: position.y + 0.5,
+          z: position.z
+        });
+        airplane.setAttribute('visible', 'true');
+        infoText.setAttribute('visible', 'true');
+      }
     });
+
+    if (AFRAME.utils.device.checkARCompatibility() === 1) {
+      hitTestEl.setAttribute('visible', 'true');
+    }
   </script>
 </body>
 </html>
