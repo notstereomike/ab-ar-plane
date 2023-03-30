@@ -7,31 +7,30 @@
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
   <script>
-   AFRAME.registerComponent('marker-visibility', {
-  init: function () {
-    const marker = this.el;
-    const scene = document.querySelector('a-scene');
-    const camera = scene.querySelector('[camera]');
+    AFRAME.registerComponent('marker-visibility', {
+      init: function () {
+        const marker = this.el;
+        const scene = document.querySelector('a-scene');
+        const camera = scene.querySelector('[camera]');
 
-    // Set the model to invisible by default
-    this.el.object3D.visible = false;
+        // Set the model to invisible by default
+        this.el.object3D.visible = false;
 
-    // When the marker is found, make the model visible and unparent from the camera
-    marker.addEventListener('markerFound', (e) => {
-      this.el.object3D.visible = true;
-      camera.object3D.remove(this.el.object3D);
-      this.el.setAttribute('position', '0 0 0');
+        // When the marker is found, make the model visible and unparent from the camera
+        marker.addEventListener('markerFound', (e) => {
+          this.el.object3D.visible = true;
+          camera.object3D.remove(this.el.object3D);
+          this.el.setAttribute('position', '0 0 0');
+        });
+
+        // When the marker is lost, parent the model to the camera
+        marker.addEventListener('markerLost', (e) => {
+          this.el.object3D.visible = true;
+          camera.object3D.add(this.el.object3D);
+          this.el.setAttribute('position', '0 0 -3'); // Set the desired distance from the camera
+        });
+      }
     });
-
-    // When the marker is lost, parent the model to the camera
-    marker.addEventListener('markerLost', (e) => {
-      this.el.object3D.visible = true;
-      camera.object3D.add(this.el.object3D);
-      this.el.setAttribute('position', '0 0 -3'); // Set the desired distance from the camera
-    });
-  }
-});
-
   </script>
 </head>
 <body style="margin: 0; overflow: hidden;">
@@ -53,7 +52,7 @@
         gltf-model="#airplane-model"
         scale="0.25 0.25 0.25"
         position="0 0 0"
-        rotation="0 0 0">
+        rotation="0 180 0">
       </a-entity>
       
       <a-text
