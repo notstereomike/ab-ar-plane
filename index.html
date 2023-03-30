@@ -11,9 +11,33 @@
       height: 100vh;
       background-color: transparent;
     }
+    
+    button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      font-size: 1.2em;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <model-viewer src="./assets/boeing-787.glb" ar camera-controls auto-rotate></model-viewer>
+  <model-viewer src="./assets/boeing-787.glb" ar ar-modes="webxr" camera-controls auto-rotate id="model-viewer"></model-viewer>
+  <button id="ar-button">Activate AR</button>
+  
+  <script>
+    const modelViewer = document.getElementById("model-viewer");
+    const arButton = document.getElementById("ar-button");
+
+    arButton.addEventListener("click", () => {
+      modelViewer.activateAR();
+    });
+  </script>
 </body>
 </html>
