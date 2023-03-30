@@ -6,6 +6,31 @@
   <title>AR Business Card</title>
   <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+  <script>
+    AFRAME.registerComponent('marker-visibility', {
+      init: function () {
+        const marker = this.el;
+        const scene = document.querySelector('a-scene');
+        const camera = scene.querySelector('[camera]');
+
+        // When the marker is found, remember its position and rotation
+        marker.addEventListener('markerFound', (e) => {
+          marker.object3D.updateMatrixWorld();
+          const position = new THREE.Vector3();
+          const quaternion = new THREE.Quaternion();
+          position.setFromMatrixPosition(marker.object3D.matrixWorld);
+          quaternion.setFromRotationMatrix(marker.object3D.matrixWorld);
+          this.el.setAttribute('position', position);
+          this.el.setAttribute('rotation', quaternion.toEuler('YXZ').toVector3().multiplyScalar(180 / Math.PI));
+        });
+
+        // When the marker is lost, keep the last known position and rotation
+        marker.addEventListener('markerLost', (e) => {
+          // Do nothing; the model will stay in its last position relative to the marker
+        });
+      }
+    });
+  </script>
 </head>
 <body style="margin: 0; overflow: hidden;">
   <a-scene
@@ -18,6 +43,7 @@
     </a-assets>
 
     <a-marker
+      marker-visibility
       preset="custom"
       type="pattern"
       url="https://notstereomike.github.io/ab-ar-plane/pattern-marker.patt">
