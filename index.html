@@ -1,69 +1,41 @@
+AR.js
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Business Card</title>
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-  <script>
-    AFRAME.registerComponent('marker-visibility', {
-      init: function () {
-        const marker = this.el;
-        const scene = document.querySelector('a-scene');
-        const camera = scene.querySelector('[camera]');
-
-        // When the marker is found, remember its position and rotation
-        marker.addEventListener('markerFound', (e) => {
-          marker.object3D.updateMatrixWorld();
-          const position = new THREE.Vector3();
-          const quaternion = new THREE.Quaternion();
-          position.setFromMatrixPosition(marker.object3D.matrixWorld);
-          quaternion.setFromRotationMatrix(marker.object3D.matrixWorld);
-          this.el.setAttribute('position', position);
-          this.el.setAttribute('rotation', quaternion.toEuler('YXZ').toVector3().multiplyScalar(180 / Math.PI));
-        });
-
-        // When the marker is lost, keep the last known position and rotation
-        marker.addEventListener('markerLost', (e) => {
-          // Do nothing; the model will stay in its last position relative to the marker
-        });
-      }
-    });
-  </script>
+  <title>Seat AR</title>
+  <link rel="shortcut icon" href="./img/favicon.png" type="image/x-icon">
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <!--<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script> -->
+  <script src="https://unpkg.com/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+  
+   
 </head>
-<body style="margin: 0; overflow: hidden;">
-  <a-scene
-    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-    renderer="logarithmicDepthBuffer: true;"
-    vr-mode-ui="enabled: false">
-    
+
+<body style='margin : 0px; overflow: hidden;'>
+	<a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
     <a-assets>
-      <a-asset-item id="airplane-model" src="./assets/untitled.gltf"></a-asset-item>
+      <a-asset-item id="model" src="./seat7.glb"></a-asset-item>
     </a-assets>
+    
+  
 
-    <a-marker
-      marker-visibility
-      preset="custom"
-      type="pattern"
-      url="https://notstereomike.github.io/ab-ar-plane/pattern-marker.patt">
-      <a-entity
-        gltf-model="#airplane-model"
-        scale="1 1 1"
-        position="0 0 0"
-        rotation="0 0 0">
-      </a-entity>
+  <!-- Kanji marker -->
+  <a-marker type='pattern' url='https://jeromeetienne.github.io/AR.js/data/data/patt.kanji'>
+    <a-entity gltf-model="#model" scale="3 3 3" position="0 0 0"></a-entity>
+
+    <!-- Your text and arrows here -->
+  </a-marker>
       
-      <a-text
-        value="Airbase UK Interiors\nService 1\nService 2\nService 3"
-        color="black"
-        position="1 1 0"
-        rotation="0 0 0"
-        text-align="left">
-      </a-text>
-    </a-marker>
+      
 
-    <a-entity camera></a-entity>
-  </a-scene>
+		<a-entity camera></a-entity>
+	</a-scene>
+  
+                
+            
 </body>
 </html>
